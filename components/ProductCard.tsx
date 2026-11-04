@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Plus } from "lucide-react";
+import { Heart } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useFavorites } from "./FavoritesProvider";
+import AddToCartButton from "./AddToCartButton";
 
 export type ProductCardData = {
   id: string;
@@ -84,13 +85,13 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
         {product.stock <= 0 && (
           <span className="text-xs text-gray-500 mt-1">Sem estoque</span>
         )}
-        <button
-          disabled={product.stock <= 0}
-          className="mt-3 w-full bg-black text-white text-xs font-medium py-2 flex items-center justify-center gap-1.5 hover:bg-black/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-        >
-          <Plus size={14} />
-          ADICIONAR
-        </button>
+        <AddToCartButton
+          id={product.id}
+          name={product.name}
+          price={product.price}
+          stock={product.stock}
+          imageUrl={product.imageUrl}
+        />
       </div>
     </div>
   );
