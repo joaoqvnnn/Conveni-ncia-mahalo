@@ -11,8 +11,10 @@ export const dynamic = "force-dynamic";
 
 export default async function PedidoPage({
   params,
+  searchParams,
 }: {
   params: { number: string };
+  searchParams: { paid?: string };
 }) {
   const num = parseInt(params.number, 10);
   if (isNaN(num)) notFound();
@@ -23,6 +25,8 @@ export default async function PedidoPage({
   });
 
   if (!order) notFound();
+
+  const paid = searchParams.paid === "1";
 
   const statusMap: Record<string, string> = {
     AGUARDANDO_CONFIRMACAO: "Aguardando confirmação da loja",
@@ -44,6 +48,12 @@ export default async function PedidoPage({
         <p className="text-sm text-gray-600 mt-2">
           {statusMap[order.status] || order.status}
         </p>
+
+        {paid && order.status === "PAGO" && (
+          <p className="text-xs text-green-700 bg-green-50 border border-green-200 px-3 py-2 mt-3 inline-block">
+            Pagamento confirmado com sucesso.
+          </p>
+        )}
       </div>
 
       <div className="border border-gray-200 p-5 space-y-4">
