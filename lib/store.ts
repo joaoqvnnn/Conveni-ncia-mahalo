@@ -9,4 +9,7 @@ export const store = {
   address: "Paranavaí — PR",
   instagram: "@convenienciameirelli",
   cnpj: "00.000.000/0001-00",
+  deliveryFee: 5.0,
+  freeDeliveryAbove: 80.0,
+  minOrder: 15.0,
 };
