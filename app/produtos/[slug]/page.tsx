@@ -22,8 +22,7 @@ export default async function ProdutoPage({
 
   if (!p || !p.active) notFound();
 
-  const Icon =
-    (Icons as any)[p.category.icon] || Icons.Package;
+  const Icon = (Icons as any)[p.category.icon] || Icons.Package;
 
   const related = await prisma.product.findMany({
     where: { categoryId: p.categoryId, id: { not: p.id }, active: true },
@@ -37,7 +36,10 @@ export default async function ProdutoPage({
         <span>/</span>
         <Link href="/produtos" className="hover:text-black">Produtos</Link>
         <span>/</span>
-        <Link href={`/produtos?categoria=${p.category.slug}`} className="hover:text-black">
+        <Link
+          href={`/produtos?categoria=${p.category.slug}`}
+          className="hover:text-black"
+        >
           {p.category.name}
         </Link>
       </nav>
@@ -46,7 +48,11 @@ export default async function ProdutoPage({
         <div className="aspect-square bg-gray-50 flex items-center justify-center border border-gray-200">
           {p.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
+            <img
+              src={p.imageUrl}
+              alt={p.name}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <Icon size={120} strokeWidth={0.8} />
           )}
@@ -82,6 +88,7 @@ export default async function ProdutoPage({
               name={p.name}
               price={Number(p.price)}
               stock={p.stock}
+              imageUrl={p.imageUrl}
             />
             <FavoriteButton id={p.id} />
           </div>
@@ -106,11 +113,24 @@ export default async function ProdutoPage({
                 href={`/produtos/${r.slug}`}
                 className="border border-gray-200 hover:border-black p-4 flex flex-col gap-2 transition-colors"
               >
-                <div className="aspect-square bg-gray-50 flex items-center justify-center">
-                  <Icon size={40} strokeWidth={1} />
+                <div className="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+                  {r.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={r.imageUrl}
+                      alt={r.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Icon size={40} strokeWidth={1} />
+                  )}
                 </div>
-                <span className="text-sm font-medium line-clamp-2">{r.name}</span>
-                <span className="text-sm font-bold">{brl(Number(r.price))}</span>
+                <span className="text-sm font-medium line-clamp-2">
+                  {r.name}
+                </span>
+                <span className="text-sm font-bold">
+                  {brl(Number(r.price))}
+                </span>
               </Link>
             ))}
           </div>
