@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { store } from "@/lib/store";
+import { useFavorites } from "./FavoritesProvider";
 
 const links = [
   { href: "/", label: "Início" },
@@ -24,6 +25,7 @@ const links = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { ids } = useFavorites();
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -65,10 +67,15 @@ export default function Navbar() {
           </Link>
           <Link
             href="/favoritos"
-            className="hidden sm:inline-flex p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="hidden sm:inline-flex relative p-2 hover:bg-gray-100 rounded-full transition-colors"
             aria-label="Favoritos"
           >
             <Heart size={20} />
+            {ids.length > 0 && (
+              <span className="absolute top-0 right-0 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                {ids.length}
+              </span>
+            )}
           </Link>
           <Link
             href="/carrinho"
