@@ -5,6 +5,8 @@ import Topbar from "@/components/Topbar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FavoritesProvider } from "@/components/FavoritesProvider";
+import { CartProvider } from "@/components/CartProvider";
+import CartDrawer from "@/components/CartDrawer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -22,10 +24,13 @@ export default function RootLayout({
     <html lang="pt-BR" className={inter.variable}>
       <body className="min-h-screen bg-white text-black antialiased">
         <FavoritesProvider>
-          <Topbar />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <CartProvider>
+            <Topbar />
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <CartDrawer />
+          </CartProvider>
         </FavoritesProvider>
       </body>
     </html>
