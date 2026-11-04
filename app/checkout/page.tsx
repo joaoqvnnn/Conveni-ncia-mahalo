@@ -68,7 +68,15 @@ export default function CheckoutPage() {
 
       const order = data.order;
 
-      // Monta mensagem do WhatsApp
+      // Se for PIX, redireciona para a página de pagamento
+      if (form.paymentMethod === "PIX") {
+        clear();
+        router.push(`/pagamento/${order.id}`);
+        return;
+      }
+
+      // Se for WHATSAPP ou NA_ENTREGA, mantém o fluxo atual:
+      // montar mensagem, abrir WhatsApp, redirecionar para /pedido/[number]
       const lines = [
         `*Novo pedido #${order.number}*`,
         "",
