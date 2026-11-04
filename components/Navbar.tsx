@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { store } from "@/lib/store";
 import { useFavorites } from "./FavoritesProvider";
+import { useCart } from "./CartProvider";
 
 const links = [
   { href: "/", label: "Início" },
@@ -26,6 +27,7 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { ids } = useFavorites();
+  const { count, openCart } = useCart();
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -77,16 +79,18 @@ export default function Navbar() {
               </span>
             )}
           </Link>
-          <Link
-            href="/carrinho"
+          <button
+            onClick={openCart}
             className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
             aria-label="Carrinho"
           >
             <ShoppingCart size={20} />
-            <span className="absolute top-0 right-0 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-              0
-            </span>
-          </Link>
+            {count > 0 && (
+              <span className="absolute top-0 right-0 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                {count}
+              </span>
+            )}
+          </button>
           <button
             onClick={() => setOpen(!open)}
             className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
