@@ -77,6 +77,14 @@ model Order {
   subtotal      Decimal     @db.Decimal(10, 2)
   deliveryFee   Decimal     @db.Decimal(10, 2) @default(0)
   total         Decimal     @db.Decimal(10, 2)
+
+  // ===== PIX =====
+  mpPaymentId   String?   @unique
+  pixQrCode     String?
+  pixCopiaECola String?
+  pixExpiresAt  DateTime?
+  paidAt        DateTime?
+
   items         OrderItem[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
