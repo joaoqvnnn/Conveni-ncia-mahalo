@@ -2,29 +2,27 @@
 
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "./CartProvider";
 
 export default function AddToCartButton({
   id,
   name,
   price,
   stock,
+  imageUrl,
 }: {
   id: string;
   name: string;
   price: number;
   stock: number;
+  imageUrl?: string | null;
 }) {
+  const { add } = useCart();
   const [added, setAdded] = useState(false);
 
   function handle() {
     if (stock <= 0) return;
-    // Módulo 3 vai trocar isso pelo carrinho real.
-    const raw = localStorage.getItem("conv:cart");
-    const cart = raw ? JSON.parse(raw) : [];
-    const existing = cart.find((i: any) => i.id === id);
-    if (existing) existing.qty += 1;
-    else cart.push({ id, name, price, qty: 1 });
-    localStorage.setItem("conv:cart", JSON.stringify(cart));
+    add({ id, name, price, stock, imageUrl });
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
   }
