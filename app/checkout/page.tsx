@@ -68,15 +68,15 @@ export default function CheckoutPage() {
 
       const order = data.order;
 
-      // Se for PIX, redireciona para a página de pagamento
+      // ===== PIX: redireciona para página de pagamento =====
       if (form.paymentMethod === "PIX") {
         clear();
+        sessionStorage.setItem("conv:lastOrder", JSON.stringify(order));
         router.push(`/pagamento/${order.id}`);
         return;
       }
 
-      // Se for WHATSAPP ou NA_ENTREGA, mantém o fluxo atual:
-      // montar mensagem, abrir WhatsApp, redirecionar para /pedido/[number]
+      // ===== WhatsApp / Na entrega: monta mensagem e abre WhatsApp =====
       const lines = [
         `*Novo pedido #${order.number}*`,
         "",
@@ -106,7 +106,6 @@ export default function CheckoutPage() {
       const text = encodeURIComponent(lines.join("\n"));
       const wa = `https://wa.me/${store.whatsapp}?text=${text}`;
 
-      // Limpa o carrinho e redireciona
       clear();
       sessionStorage.setItem("conv:lastOrder", JSON.stringify(order));
       window.open(wa, "_blank");
@@ -233,7 +232,7 @@ export default function CheckoutPage() {
             </legend>
             {[
               { value: "WHATSAPP", label: "A combinar pelo WhatsApp" },
-              { value: "PIX", label: "PIX (será gerado após confirmar)" },
+              { value: "PIX", label: "PIX (QR Code gerado após confirmar)" },
               { value: "NA_ENTREGA", label: "Pagar na entrega" },
             ].map((o) => (
               <label
@@ -306,8 +305,9 @@ export default function CheckoutPage() {
             )}
           </button>
           <p className="text-[11px] text-gray-500 text-center leading-relaxed">
-            Ao confirmar, seu pedido será registrado e você será direcionado ao
-            WhatsApp para acompanhar a entrega.
+            {form.paymentMethod === "PIX"
+              ? "Ao confirmar, você será direcionado para a página do PIX com QR Code."
+              : "Ao confirmar, seu pedido será registrado e você será direcionado ao WhatsApp para acompanhar a entrega."}
           </p>
         </aside>
       </form>
