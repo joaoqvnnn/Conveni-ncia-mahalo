@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { store } from "@/lib/store";
+import { getSession } from "@/lib/auth";
 
 type Body = {
   name: string;
@@ -23,6 +24,23 @@ function calcDeliveryFee(subtotal: number) {
 }
 
 export async function POST(req: Request) {
+  // ==================== AUTH ====================
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json(
+      { error: "Faça login para finalizar a compra." },
+      { status: 401 }
+    );
+  }
+
+  const customer = await prisma.customer.findUnique({
+    where: { id: session.customerId },
+  });
+  if (!customer) {
+    return NextResponse.json({ error: "Sessão inválida." }, { status: 401 });
+  }
+
+  // ==================== VALIDAÇÃO ====================
   const body: Body = await req.json();
 
   if (!body.name || !body.phone || !body.street || !body.number || !body.district || !body.city || !body.state) {
@@ -62,6 +80,7 @@ export async function POST(req: Request) {
     );
   }
 
+  // ==================== CÁLCULOS ====================
   const deliveryFee = calcDeliveryFee(subtotal);
   const total = subtotal + deliveryFee;
   const addressLine = `${body.street}, ${body.number}${
@@ -70,16 +89,7 @@ export async function POST(req: Request) {
     body.zip ? " - CEP " + body.zip : ""
   }`;
 
-  // Cria/reutiliza customer pelo telefone
-  let customer = await prisma.customer.findFirst({
-    where: { phone: body.phone },
-  });
-  if (!customer) {
-    customer = await prisma.customer.create({
-      data: { name: body.name, phone: body.phone },
-    });
-  }
-
+  // ==================== CRIA PEDIDO ====================
   const order = await prisma.order.create({
     data: {
       customerId: customer.id,
