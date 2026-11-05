@@ -13,7 +13,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "lucide-react": "^0.400.0",
-    "@prisma/client": "^5.16.0"
+    "@prisma/client": "^5.16.0",
+    "mercadopago": "^2.0.15"
   },
   "devDependencies": {
     "prisma": "^5.16.0",
